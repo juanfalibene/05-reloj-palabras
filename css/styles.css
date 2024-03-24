@@ -16,6 +16,16 @@ body {
   overflow: hidden;
   height: 100dvh;
 }
+.hoy {
+  font-size: calc(60% + 0.25dvw);
+  padding: 0 0.25em;
+  margin: 0;
+  -webkit-text-fill-color: transparent;
+  -webkit-text-stroke-width: 1px;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  width: fit-content;
+}
 
 .parent {
   width: max-content;
@@ -26,6 +36,7 @@ body {
   grid-column-gap: 0;
   grid-row-gap: 0;
   padding: calc(0.25rem - 1.25dvw);
+  margin: -1% 0;
 }
 
 .div1 {
@@ -63,7 +74,9 @@ body {
   line-height: 80%;
   -webkit-text-fill-color: transparent;
   -webkit-text-stroke-width: 1px;
-  -webkit-text-stroke-color: black;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  transition: all 60ms ease-in-out;
 }
 
 li.hora-espacio-10 {
@@ -80,27 +93,34 @@ li.hora-espacio-2 {
 
 .am {
   background-color: white;
-  color: black;
+  -webkit-text-stroke-color: black;
 }
 
 .pm {
   background-color: black;
-  color: white;
+  -webkit-text-stroke-color: white;
 }
 
 .min {
-  background: -webkit-linear-gradient(0deg, white 10%, black 10%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 
-.en-punto {
-  background-color: black;
+.min::before {
+  content: "·";
+  animation: segundero 1s linear infinite;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
-.vacio {
-  background-color: white;
+
+@keyframes segundero {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+    background-color: gray;
+  }
 }
 
 .amanecer {
@@ -118,7 +138,13 @@ li.hora-espacio-2 {
 .noche {
   background-color: slategray;
 }
+
 @media screen and (max-width: 768px) {
+  .hoy {
+    font-size: calc(22% + 0.025dvw);
+    padding: calc(0.25rem - 5dvw);
+    letter-spacing: 0px;
+  }
   .parent {
     padding: calc(0.25rem - 5dvw);
   }

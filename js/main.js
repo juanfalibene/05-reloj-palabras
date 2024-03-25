@@ -5,6 +5,13 @@ document.addEventListener("DOMContentLoaded", () => {
     let h = date.getHours();
     let ampm = h >= 12 ? "PM" : "AM";
     let m = date.getMinutes();
+    let s = date.getSeconds();
+    console.log("SEGUNDO ACTUAL" + s);
+    let minutoExacto = 60000 - (new Date().getTime() % 60000);
+    console.log("SEGUNDOS EXACTO: " + minutoExacto);
+    let diferenciaMSaS = 60000 - minutoExacto;
+    let sumaMinAms = minutoExacto + diferenciaMSaS;
+    console.log(sumaMinAms);
     h = h % 12;
     h = h ? h : 12; // LA HORA 0 DEBE SER 12
 
@@ -26,19 +33,26 @@ const pintarHora = (h, m, ampm) => {
   console.log("MINUTOS FALTAN " + mf);
   let porcentaje = (60 - mf) * (100 / 60);
   console.log("PORCENTAJE: " + porcentaje);
-  console.log(ampm);
-  if (m === 59 && horaActual === h) {
-    console.log("ULTIMO MINUTO Y NO COMPLETO");
-    porcentaje === 100;
-    const horaSiguiente = document.getElementById(h + 1);
-    console.log("HORA SIGUIENTE: " + horaSiguiente);
-    if (horaSiguiente.classList.contains("min")) {
-      horaSiguiente.classList.remove("min");
+  const horaSiguiente = h + 1;
+  console.log("HORA SIGUIENTE: " + horaSiguiente);
+  const horaSiguienteLi = document.getElementById(horaSiguiente);
+  const horaAnterior = h - 1;
+  const horaAnteriorLi = document.getElementById(horaAnterior);
+  console.log("HORA ANTERIOR: " + horaAnterior);
+
+  if (mf === 1 || m === 59) {
+    console.log("falta un minuto");
+    porcentaje = 100;
+    if (horaSiguienteLi.classList.contains("min")) {
+      horaSiguienteLi.classList.remove("min");
+      horaActual.classList.remove("min");
     }
   }
-  if (mf === 1) {
-    console.log("falta un minuto");
-    porcentaje === 100;
+
+  if (m === 0 || mf === 60 || m <= 3) {
+    if (horaAnteriorLi.classList.contains("min")) {
+      horaAnteriorLi.classList.remove("min");
+    }
   }
 
   // actualizar estilos de degradado % por minuto
@@ -66,22 +80,27 @@ const cambiarAmPm = (h, ampm) => {
     // es
     esLa.classList.replace("am", "pm");
     // PM - emoji
-    if (h >= 1 && h <= 6) {
+    if (h >= 1 && h < 6) {
       console.log("tarde");
       hoy.classList.remove("pm");
-      document.body.classList.replace("mediodia", "tarde");
+      document.body.classList.remove("mediodia");
+      document.body.classList.add("tarde");
       emojiElegido = momentosEmoji[1];
-    } else if (h >= 6 && h <= 7) {
+    } else if (h >= 7 && h < 8) {
       console.log("atardece");
-      document.body.classList.replace("tarde", "atardece");
+      console.log(h);
+      document.body.classList.remove("tarde");
+      document.body.classList.add("atardece");
       emojiElegido = momentosEmoji[2];
-    } else if (h >= 8 && h <= 11) {
+    } else if (h >= 8 && h < 10) {
       console.log("anochece");
-      document.body.classList.replace("atardece", "anochece");
+      document.body.classList.remove("atardece");
+      document.body.classList.add("anochece");
       emojiElegido = momentosEmoji[3];
-    } else if (h === 11 && h <= 12) {
+    } else if (h >= 10 && h < 12) {
       console.log("noche");
-      document.body.classList.replace("anochece", "noche");
+      document.body.classList.remove("anochece");
+      document.body.classList.add("noche");
       emojiElegido = momentosEmoji[4];
     }
     // PM
@@ -92,16 +111,21 @@ const cambiarAmPm = (h, ampm) => {
     esLa.classList.replace("am", "pm");
     // AM - emoji
     cambioAmPm.classList.replace("am", "pm");
-    if (h >= 12 && h <= 6) {
+    if (h >= 12 && h < 6) {
       console.log("noche");
+      if (document.body.classList.contains("noche")) {
+        console.log("YA TIENE NOCHE");
+      }
       emojiElegido = momentosEmoji[4];
-    } else if (h >= 6 && h <= 7) {
+    } else if (h >= 6 && h < 7) {
       console.log("amanece");
-      document.body.classList.replace("noche", "amanece");
+      document.body.classList.remove("noche");
+      document.body.classList.add("amanece");
       emojiElegido = momentosEmoji[0];
-    } else if (h >= 8 && h <= 11) {
+    } else if (h >= 8 && h < 11) {
       console.log("mediodia");
-      document.body.classList.replace("amanece", "mediodia");
+      document.body.classList.remove("amanece");
+      document.body.classList.add("medidodia");
       emojiElegido = momentosEmoji[1];
     }
     cambioAmPm.innerHTML = `${ampm} <span id="emoji">${emojiElegido}</span>`;

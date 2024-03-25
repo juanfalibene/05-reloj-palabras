@@ -17,58 +17,34 @@ document.addEventListener("DOMContentLoaded", () => {
   reloj();
 });
 
-const mostrarFecha = () => {
-  const relojPantalla = document.getElementById("reloj");
-  const fecha = new Date();
-  const dias = [
-    "Domingo",
-    "Lunes",
-    "Martes",
-    "Miercoles",
-    "Jueves",
-    "Viernes",
-    "Sabado",
-  ];
-  const meses = [
-    "Enero",
-    "Febrero",
-    "Marzo",
-    "Abril",
-    "Mayo",
-    "Junio",
-    "Julio",
-    "Agosto",
-    "Septiembre",
-    "Octubre",
-    "Noviemnre",
-    "Diciembre",
-  ];
-  let nombreDia = dias[fecha.getDay()];
-  let numeroDia = fecha.getDate();
-  let mes = meses[fecha.getMonth()];
-  let anio = fecha.getFullYear();
-  let fechaCompleta = `HOY ES ${nombreDia} ${numeroDia} de ${mes} de ${anio}`;
-
-  relojPantalla.textContent = fechaCompleta;
-};
-
-mostrarFecha();
-
 const pintarHora = (h, m, ampm) => {
+  // seleccionar ID hora actual
+  const horaActual = document.getElementById(h);
+
   console.log("MINUTO ACTUAL: " + m);
   let mf = Math.floor(60 - m);
   console.log("MINUTOS FALTAN " + mf);
   let porcentaje = (60 - mf) * (100 / 60);
   console.log("PORCENTAJE: " + porcentaje);
   console.log(ampm);
+  if (m === 59 && horaActual === h) {
+    console.log("ULTIMO MINUTO Y NO COMPLETO");
+    porcentaje === 100;
+    const horaSiguiente = document.getElementById(h + 1);
+    console.log("HORA SIGUIENTE: " + horaSiguiente);
+    if (horaSiguiente.classList.contains("min")) {
+      horaSiguiente.classList.remove("min");
+    }
+  }
+  if (mf === 1) {
+    console.log("falta un minuto");
+    porcentaje === 100;
+  }
 
-  // seleccionar ID hora actual
-  const horaActual = document.getElementById(h);
   // actualizar estilos de degradado % por minuto
-  let blancoA = "rgba(255, 255, 255, 0.5)";
+  let blancoA = "rgba(255, 255, 255, 0.2)";
   let negroA = "rgba(0, 0, 0, 0.2)";
   let coloresAMPM = ampm === "AM" ? [negroA, blancoA] : [blancoA, negroA];
-  console.log(coloresAMPM);
   horaActual.style.background = `-webkit-linear-gradient(0deg, ${coloresAMPM[0]} ${porcentaje}%, ${coloresAMPM[1]} ${porcentaje}%)`;
   horaActual.style.webkitBackgroundClip = "text";
   horaActual.style.webkitTextFillColor = "transparent";
@@ -84,53 +60,48 @@ const cambiarAmPm = (h, ampm) => {
     h === 1 ? (esLa.textContent = "ES LA") : (esLa.textContent = "SON LAS");
   if (ampm === "PM") {
     // body
-    document.body.classList.remove("am");
-    document.body.classList.add("pm");
+    document.body.classList.replace("am", "pm");
     // hoy
-    hoy.classList.remove("am");
-    hoy.classList.add("pm");
+    hoy.classList.replace("am", "pm");
     // es
-    esLa.classList.remove("am");
-    esLa.classList.add("pm");
+    esLa.classList.replace("am", "pm");
     // PM - emoji
     if (h >= 1 && h <= 6) {
       console.log("tarde");
       hoy.classList.remove("pm");
-      document.body.classList.add("tarde");
+      document.body.classList.replace("mediodia", "tarde");
       emojiElegido = momentosEmoji[1];
     } else if (h >= 6 && h <= 7) {
       console.log("atardece");
-      document.body.classList.add("atardece");
+      document.body.classList.replace("tarde", "atardece");
       emojiElegido = momentosEmoji[2];
     } else if (h >= 8 && h <= 11) {
       console.log("anochece");
-      document.body.classList.add("anochece");
+      document.body.classList.replace("atardece", "anochece");
       emojiElegido = momentosEmoji[3];
     } else if (h === 11 && h <= 12) {
       console.log("noche");
-      document.body.classList.remove("anochece");
-      document.body.classList.add("pm");
+      document.body.classList.replace("anochece", "noche");
       emojiElegido = momentosEmoji[4];
     }
     // PM
-    cambioAmPm.classList.remove("am");
-    cambioAmPm.classList.add("pm");
+    cambioAmPm.classList.replace("am", "pm");
     cambioAmPm.innerHTML = `${ampm} <span id="emoji">${emojiElegido}</span>`;
   } else {
     // es - son
-    esLa.classList.remove("am");
-    esLa.classList.add("pm");
+    esLa.classList.replace("am", "pm");
     // AM - emoji
-    cambioAmPm.classList.remove("am");
-    cambioAmPm.classList.add("pm");
+    cambioAmPm.classList.replace("am", "pm");
     if (h >= 12 && h <= 6) {
       console.log("noche");
       emojiElegido = momentosEmoji[4];
     } else if (h >= 6 && h <= 7) {
       console.log("amanece");
+      document.body.classList.replace("noche", "amanece");
       emojiElegido = momentosEmoji[0];
     } else if (h >= 8 && h <= 11) {
       console.log("mediodia");
+      document.body.classList.replace("amanece", "mediodia");
       emojiElegido = momentosEmoji[1];
     }
     cambioAmPm.innerHTML = `${ampm} <span id="emoji">${emojiElegido}</span>`;

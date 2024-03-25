@@ -1,95 +1,138 @@
 /* reloj-palabra x juanfalibene.com */
 document.addEventListener("DOMContentLoaded", () => {
-  const relojPantalla = document.getElementById("reloj");
-
   const reloj = () => {
     const date = new Date();
     let h = date.getHours();
-    let ampm = h >= 12 ? "PM." : "AM.";
-    let m = date.getMinutes().toString().padStart(2, "0");
-    let s = date.getSeconds().toString().padStart(2, "0");
+    let ampm = h >= 12 ? "PM" : "AM";
+    let m = date.getMinutes();
     h = h % 12;
     h = h ? h : 12; // LA HORA 0 DEBE SER 12
-    let horaCompleta = `${h}:${m}:${s}`;
 
-    const dias = [
-      "Domingo",
-      "Lunes",
-      "Martes",
-      "Miercoles",
-      "Jueves",
-      "Viernes",
-      "Sabado",
-    ];
-    const meses = [
-      "Enero",
-      "Febrero",
-      "Marzo",
-      "Abril",
-      "Mayo",
-      "Junio",
-      "Julio",
-      "Agosto",
-      "Septiembre",
-      "Octubre",
-      "Noviemnre",
-      "Diciembre",
-    ];
-    let nombreDia = dias[date.getDay()];
-    let numeroDia = date.getDate();
-    let mes = meses[date.getMonth()];
-    let anio = date.getFullYear();
-    let fechaCompleta = `${nombreDia} ${numeroDia} de ${mes} ${anio}`;
-
-    relojPantalla.textContent = "HOY ES " + fechaCompleta;
-
-    cambiarEsLa(h);
-    pintarHora(h, m);
-    cambiarAmPm(ampm);
+    pintarHora(h, m, ampm);
+    cambiarAmPm(h, ampm);
   };
 
-  setInterval(reloj, 1000);
+  setInterval(reloj, 60000 - (new Date().getTime() % 60000));
 
   reloj();
 });
 
-const cambiarEsLa = (h) => {
-  const esLa = document.getElementById("es");
-  if (h === 1) {
-    esLa.textContent = "ES LA";
-  } else {
-    esLa.textContent = "SON LAS";
-  }
+const mostrarFecha = () => {
+  const relojPantalla = document.getElementById("reloj");
+  const fecha = new Date();
+  const dias = [
+    "Domingo",
+    "Lunes",
+    "Martes",
+    "Miercoles",
+    "Jueves",
+    "Viernes",
+    "Sabado",
+  ];
+  const meses = [
+    "Enero",
+    "Febrero",
+    "Marzo",
+    "Abril",
+    "Mayo",
+    "Junio",
+    "Julio",
+    "Agosto",
+    "Septiembre",
+    "Octubre",
+    "Noviemnre",
+    "Diciembre",
+  ];
+  let nombreDia = dias[fecha.getDay()];
+  let numeroDia = fecha.getDate();
+  let mes = meses[fecha.getMonth()];
+  let anio = fecha.getFullYear();
+  let fechaCompleta = `HOY ES ${nombreDia} ${numeroDia} de ${mes} de ${anio}`;
+
+  relojPantalla.textContent = fechaCompleta;
 };
 
+mostrarFecha();
+
 const pintarHora = (h, m, ampm) => {
-  console.log(h + m);
+  console.log("MINUTO ACTUAL: " + m);
   let mf = Math.floor(60 - m);
-  console.log(mf);
-  let porcentaje = 60 - mf;
-  console.log(porcentaje);
-  let porcentaje100 = porcentaje * 1.6;
-  console.log(porcentaje100);
+  console.log("MINUTOS FALTAN " + mf);
+  let porcentaje = (60 - mf) * (100 / 60);
+  console.log("PORCENTAJE: " + porcentaje);
+  console.log(ampm);
 
   // seleccionar ID hora actual
   const horaActual = document.getElementById(h);
   // actualizar estilos de degradado % por minuto
-  let color1 = ampm === "PM." ? "gray" : "white";
-  let color2 = ampm === "AM." ? "white" : "gray";
-  horaActual.style.background = `-webkit-linear-gradient(0deg, ${color1} ${porcentaje100}%, ${color2} ${porcentaje100}%)`;
+  let blancoA = "rgba(255, 255, 255, 0.5)";
+  let negroA = "rgba(0, 0, 0, 0.2)";
+  let coloresAMPM = ampm === "AM" ? [negroA, blancoA] : [blancoA, negroA];
+  console.log(coloresAMPM);
+  horaActual.style.background = `-webkit-linear-gradient(0deg, ${coloresAMPM[0]} ${porcentaje}%, ${coloresAMPM[1]} ${porcentaje}%)`;
   horaActual.style.webkitBackgroundClip = "text";
   horaActual.style.webkitTextFillColor = "transparent";
   horaActual.classList.add("min");
 };
 
-const cambiarAmPm = (ampm) => {
+const cambiarAmPm = (h, ampm) => {
   const cambioAmPm = document.getElementById("am-pm");
-  cambioAmPm.textContent = ampm;
   const hoy = document.getElementById("reloj");
-  if (ampm === "PM.") {
+  const esLa = document.getElementById("es");
+  const momentosEmoji = ["🌅", "🌞", "🌇", "🌃", "🌚"];
+  esLaText =
+    h === 1 ? (esLa.textContent = "ES LA") : (esLa.textContent = "SON LAS");
+  if (ampm === "PM") {
+    // body
     document.body.classList.remove("am");
     document.body.classList.add("pm");
+    // hoy
     hoy.classList.remove("am");
     hoy.classList.add("pm");
+    // es
+    esLa.classList.remove("am");
+    esLa.classList.add("pm");
+    // PM - emoji
+    if (h >= 1 && h <= 6) {
+      console.log("tarde");
+      hoy.classList.remove("pm");
+      document.body.classList.add("tarde");
+      emojiElegido = momentosEmoji[1];
+    } else if (h >= 6 && h <= 7) {
+      console.log("atardece");
+      document.body.classList.add("atardece");
+      emojiElegido = momentosEmoji[2];
+    } else if (h >= 8 && h <= 11) {
+      console.log("anochece");
+      document.body.classList.add("anochece");
+      emojiElegido = momentosEmoji[3];
+    } else if (h === 11 && h <= 12) {
+      console.log("noche");
+      document.body.classList.remove("anochece");
+      document.body.classList.add("pm");
+      emojiElegido = momentosEmoji[4];
+    }
+    // PM
+    cambioAmPm.classList.remove("am");
+    cambioAmPm.classList.add("pm");
+    cambioAmPm.innerHTML = `${ampm} <span id="emoji">${emojiElegido}</span>`;
+  } else {
+    // es - son
+    esLa.classList.remove("am");
+    esLa.classList.add("pm");
+    // AM - emoji
+    cambioAmPm.classList.remove("am");
+    cambioAmPm.classList.add("pm");
+    if (h >= 12 && h <= 6) {
+      console.log("noche");
+      emojiElegido = momentosEmoji[4];
+    } else if (h >= 6 && h <= 7) {
+      console.log("amanece");
+      emojiElegido = momentosEmoji[0];
+    } else if (h >= 8 && h <= 11) {
+      console.log("mediodia");
+      emojiElegido = momentosEmoji[1];
+    }
+    cambioAmPm.innerHTML = `${ampm} <span id="emoji">${emojiElegido}</span>`;
   }
 };

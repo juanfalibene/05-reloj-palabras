@@ -55,14 +55,10 @@ const pintarHora = (h, m, ampm, s) => {
   // al minuto 0 remover elemeto minutero en hora anterior -- ULTIMAS PRUEBAS MIE 27
   let horaAnterior = horasArr.at(h - 1);
   const horaAnteriorLi = document.getElementById(horaAnterior);
-  console.log(horaAnteriorLi);
   const horaAnteriorMinuteroDIV = document.getElementById(
     `"m-${horaAnterior}"`
   );
-  console.log(horaAnteriorMinuteroDIV);
-  // hacer arrays de tiempos y sumar 1
   if (m == 0 && horaAnteriorMinuteroDIV != null) {
-    console.log(h, horaActual.textContent, horaAnterior, horaAnteriorLi);
     horaAnteriorLi.style = "";
     horaAnteriorLi.removeChild(horaAnteriorMinuteroDIV);
   }
@@ -83,12 +79,12 @@ const pintarHora = (h, m, ampm, s) => {
   horaActual.style.webkitBackgroundClip = "text";
   horaActual.style.webkitTextFillColor = "transparent";
   horaActual.classList.add("min");
-  // mover minutero segun %
-  //let minLeft = m + 1.6;
+  /* mover minutero segun % let minLeft = m + 1.6; -- SIN UTILIZAR */
+  // actualizar minutero y segundero escrito
   let minPseudo = document.querySelector(".minutero");
+  // Pproxima mejora: escribir minutos y segundos desde array
   let frase = `${m.toString().padStart(2, "0")} MINUTOS<br>${s} SEGUNDOS`;
   minPseudo.innerHTML = frase;
-  //minPseudo.style.left = `${minLeft}%`;
 };
 
 const cambiarClase = (elemento, clase, momentoAdd, momentoRemove) => {

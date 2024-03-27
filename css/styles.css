@@ -5,6 +5,7 @@
 }
 :root {
   font-size: calc(7.5rem + 0.25vw);
+  font-weight: normal;
 }
 body {
   display: flex;
@@ -22,20 +23,6 @@ body {
   overflow: hidden;
   height: 100dvh;
   transition: all 60ms ease-in-out;
-}
-
-.hoy {
-  width: 100%;
-  max-width: 100%;
-  padding: 0;
-  margin: 0 auto;
-  font-size: calc(60% + 0.25dvw);
-  margin: 0;
-  -webkit-text-fill-color: transparent;
-  -webkit-text-stroke-width: 1px;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  padding: 0 0.05em;
 }
 
 .parent {
@@ -78,15 +65,16 @@ body {
 .ul1 li {
   display: flex;
   min-width: fit-content;
-  /*width: -webkit-fill-available;*/
   padding: 0;
   margin: 0;
   font-size: calc(100% - 0.25dvw);
   line-height: 80%;
   -webkit-text-fill-color: transparent;
-  -webkit-text-stroke-width: 1px;
+  -webkit-text-stroke-width: 1.15px;
+  -webkit-text-stroke-color: rgba(0, 0, 0, 0.6);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0.5px 0.5px 5px black);
   transition: all 60ms ease-in-out;
 }
 
@@ -115,34 +103,44 @@ body {
 }
 
 .am {
-  background-color: rgba(255, 255, 255, 0.5);
-  -webkit-text-stroke-color: rgba(0, 0, 0, 0.2);
+  background-color: rgba(255, 255, 255, 0.4);
+  -webkit-text-stroke-color: rgba(0, 0, 0, 0.4);
+  mix-blend-mode: soft-light;
 }
 
 .pm {
-  background-color: rgba(0, 0, 0, 0.2);
-  -webkit-text-stroke-color: rgba(255, 255, 255, 0.5) Ç;
+  background-color: rgba(0, 0, 0, 0.6);
+  -webkit-text-stroke-color: rgba(255, 255, 255, 0.6);
+  mix-blend-mode: soft-light;
 }
 
 .min {
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
+  transition: all 1s ease-in-out;
 }
 
-.min::before {
-  content: "\2219";
-  font-size: 40%;
-  position: relative;
-  width: 0.025rem;
-  height: 0.025rem;
-  display: block;
-  margin: 5px 5px 0 0;
+.minutero {
+  font-size: 15%;
+  letter-spacing: -2px;
+  width: 0.0025rem;
+  display: inline-block;
+  margin: 2px 0;
+  text-wrap: nowrap;
   padding: 0;
-  top: -50%;
-  vertical-align: middle;
-  animation: segundero 1s linear infinite;
+  position: relative;
+  top: 5%;
+  right: 97%;
+  line-height: 99%;
   -webkit-background-clip: text;
+  -webkit-text-stroke-width: 0px !important;
+  -webkit-text-fill-color: rgba(255, 255, 255, 0.6);
+  filter: drop-shadow(1px 0.5px 1px rgba(255, 145, 0, 0.9));
   z-index: 9999;
+}
+
+#segundero {
+  animation: segundero 1s linear infinite;
 }
 
 @keyframes segundero {
@@ -152,53 +150,47 @@ body {
   }
   to {
     opacity: 1;
-    -webkit-text-fill-color: black;
+    -webkit-text-fill-color: rgba(0, 0, 0, 0.6);
   }
 }
 
 #emoji {
   font-size: 40%;
   padding: 0;
-  margin-left: 10px;
+  clip-path: circle(25% at 42% 50%);
 }
 
 .amanece {
-  background-color: chocolate;
+  background: linear-gradient(135deg, #efe9e5, #d7be4f);
 }
+
 .mediodia {
-  background: #b8bc31;
-  background: linear-gradient(135deg, #b8bc31, #9db7d6);
+  background: linear-gradient(135deg, #f2c656, #edc72f);
 }
+
 .tarde {
-  background: #2eedfb;
-  background: linear-gradient(135deg, #2eedfb, #bfeb74);
+  background: linear-gradient(135deg, #f2c94c, #e1ed31);
 }
+
 .atardece {
-  background: #d3e238;
-  background: linear-gradient(135deg, #d3e238, #cb9d66);
+  background: linear-gradient(135deg, #eb8d57, #452727);
 }
+
 .anochece {
-  background: #456ca3;
-  background: linear-gradient(135deg, #456ca3, #8196e6);
+  background: linear-gradient(135deg, #6b78d9, #1e2533);
 }
+
 .noche {
-  background: #091d2d;
-  background: linear-gradient(0deg, #091d2d, #18177a);
+  background: linear-gradient(135deg, #091d2d, #07072e);
 }
 
 @media screen and (max-width: 768px) {
-  .hoy {
-    font-size: calc(22% + 0.025dvw);
-    padding: calc(0.25rem - 5dvw);
-    letter-spacing: 0px;
-  }
-  .parent {
-    padding: calc(0.25rem - 5dvw);
-    padding-right: 1px;
+  body {
+    padding: 1px;
   }
   .ul1 li {
-    font-size: calc(38% + 0.025dvw);
-    width: -webkit-fill-available;
+    font-size: calc(33.3% + 0.025dvw);
+    width: fit-content;
   }
   .min::before {
     margin: 0 0;

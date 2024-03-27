@@ -3,129 +3,168 @@ document.addEventListener("DOMContentLoaded", () => {
   const reloj = () => {
     const date = new Date();
     let h = date.getHours();
-    let ampm = h >= 12 ? "PM" : "AM";
+    let ampm = h >= 12 ? "pm" : "am";
     let m = date.getMinutes();
-    let s = date.getSeconds();
-    console.log("SEGUNDO ACTUAL" + s);
-    let minutoExacto = 60000 - (new Date().getTime() % 60000);
-    console.log("SEGUNDOS EXACTO: " + minutoExacto);
-    let diferenciaMSaS = 60000 - minutoExacto;
-    let sumaMinAms = minutoExacto + diferenciaMSaS;
-    console.log(sumaMinAms);
+    let s = date.getSeconds().toString().padStart(2, "0");
     h = h % 12;
     h = h ? h : 12; // LA HORA 0 DEBE SER 12
 
-    pintarHora(h, m, ampm);
+    pintarHora(h, m, ampm, s);
     cambiarAmPm(h, ampm);
   };
 
-  setInterval(reloj, 60000 - (new Date().getTime() % 60000));
+  setInterval(reloj, 1000);
 
   reloj();
 });
 
-const pintarHora = (h, m, ampm) => {
+const pintarHora = (h, m, ampm, s) => {
   // seleccionar ID hora actual
-  const horaActual = document.getElementById(h);
+  const horasArr = [
+    "doce",
+    "una",
+    "dos",
+    "tres",
+    "cuatro",
+    "cinco",
+    "seis",
+    "siete",
+    "ocho",
+    "nueve",
+    "diez",
+    "once",
+  ];
+  idHora =
+    h === 12
+      ? (horaActual = document.getElementById(horasArr[0]))
+      : (horaActual = document.getElementById(horasArr[h]));
+  textHora =
+    h === 12
+      ? (horaActual.textContent = `${horasArr[0]}`)
+      : (horaActual.textContent = `${horasArr[h]}`);
+  // crear child .minutero
+  const minuteroDIV = document.createElement("div");
+  minuteroDIV.classList.add("minutero");
+  minuteroDIV.setAttribute("id", `"m-${h}"`);
+  horaActual.appendChild(minuteroDIV);
 
-  console.log("MINUTO ACTUAL: " + m);
+  // % degradado minutero blanco min transcurridos negro min faltan
   let mf = Math.floor(60 - m);
-  console.log("MINUTOS FALTAN " + mf);
   let porcentaje = (60 - mf) * (100 / 60);
-  console.log("PORCENTAJE: " + porcentaje);
-  const horaSiguiente = h + 1;
-  console.log("HORA SIGUIENTE: " + horaSiguiente);
-  const horaSiguienteLi = document.getElementById(horaSiguiente);
-  const horaAnterior = h - 1;
+
+  // al minuto 0 remover elemeto minutero en hora anterior -- ULTIMAS PRUEBAS MIE 27
+  let horaAnterior = horasArr.at(h - 1);
   const horaAnteriorLi = document.getElementById(horaAnterior);
-  console.log("HORA ANTERIOR: " + horaAnterior);
-
-  if (mf === 1 || m === 59) {
-    console.log("falta un minuto");
-    porcentaje = 100;
-    if (horaSiguienteLi.classList.contains("min")) {
-      horaSiguienteLi.classList.remove("min");
-      horaActual.classList.remove("min");
-    }
-  }
-
-  if (m === 0 || mf === 60 || m <= 3) {
-    if (horaAnteriorLi.classList.contains("min")) {
-      horaAnteriorLi.classList.remove("min");
-    }
+  console.log(horaAnteriorLi);
+  const horaAnteriorMinuteroDIV = document.getElementById(
+    `"m-${horaAnterior}"`
+  );
+  console.log(horaAnteriorMinuteroDIV);
+  // hacer arrays de tiempos y sumar 1
+  if (m == 0 && horaAnteriorMinuteroDIV != null) {
+    console.log(h, horaActual.textContent, horaAnterior, horaAnteriorLi);
+    horaAnteriorLi.style = "";
+    horaAnteriorLi.removeChild(horaAnteriorMinuteroDIV);
   }
 
   // actualizar estilos de degradado % por minuto
-  let blancoA = "rgba(255, 255, 255, 0.2)";
-  let negroA = "rgba(0, 0, 0, 0.2)";
-  let coloresAMPM = ampm === "AM" ? [negroA, blancoA] : [blancoA, negroA];
-  horaActual.style.background = `-webkit-linear-gradient(0deg, ${coloresAMPM[0]} ${porcentaje}%, ${coloresAMPM[1]} ${porcentaje}%)`;
+  let coloresArr = [
+    "rgba(255, 255, 255, 0.4)",
+    "rgba(0, 0, 0, 0.4)",
+    "rgba(255, 255, 255, 0.6)",
+    "rgba(0, 0, 0, 0.6)",
+  ];
+  let coloresAMPM =
+    ampm === "AM"
+      ? [coloresArr[0], coloresArr[1]]
+      : [coloresArr[2], coloresArr[3]];
+  // css
+  horaActual.style.background = `-webkit-linear-gradient(0deg, ${coloresAMPM[1]} ${porcentaje}%, ${coloresAMPM[0]} ${porcentaje}%)`;
   horaActual.style.webkitBackgroundClip = "text";
   horaActual.style.webkitTextFillColor = "transparent";
   horaActual.classList.add("min");
+  // mover minutero segun %
+  //let minLeft = m + 1.6;
+  let minPseudo = document.querySelector(".minutero");
+  let frase = `${m.toString().padStart(2, "0")} MINUTOS<br>${s} SEGUNDOS`;
+  minPseudo.innerHTML = frase;
+  //minPseudo.style.left = `${minLeft}%`;
 };
 
+const cambiarClase = (elemento, clase, momentoAdd, momentoRemove) => {
+  if (
+    clase === "am" &&
+    momentoAdd === undefined &&
+    momentoRemove === undefined
+  ) {
+    elemento.classList.remove("pm");
+    elemento.classList.add(clase);
+  } else if (
+    clase === "pm" &&
+    momentoAdd === undefined &&
+    momentoRemove === undefined
+  ) {
+    elemento.classList.remove("am");
+    elemento.classList.add(clase);
+  }
+  // cambio clase momentos
+  if (momentoAdd === undefined && momentoRemove === undefined) {
+  } else {
+    elemento.classList.remove(momentoRemove);
+    elemento.classList.add(momentoAdd);
+  }
+};
 const cambiarAmPm = (h, ampm) => {
+  const bodyOBJ = document.body;
   const cambioAmPm = document.getElementById("am-pm");
-  const hoy = document.getElementById("reloj");
   const esLa = document.getElementById("es");
+  const momentoDia = [
+    "noche",
+    "amanece",
+    "mediodia",
+    "tarde",
+    "atardece",
+    "anochece",
+  ];
   const momentosEmoji = ["🌅", "🌞", "🌇", "🌃", "🌚"];
   esLaText =
     h === 1 ? (esLa.textContent = "ES LA") : (esLa.textContent = "SON LAS");
-  if (ampm === "PM") {
-    // body
-    document.body.classList.replace("am", "pm");
-    // hoy
-    hoy.classList.replace("am", "pm");
-    // es
-    esLa.classList.replace("am", "pm");
-    // PM - emoji
-    if (h >= 1 && h < 6) {
-      console.log("tarde");
-      hoy.classList.remove("pm");
-      document.body.classList.remove("mediodia");
-      document.body.classList.add("tarde");
+  if (ampm === "pm") {
+    cambiarClase(bodyOBJ, ampm);
+    // es - son
+    cambiarClase(esLa, ampm);
+    // PM - emoji y momento
+    if (h == 12 || (h >= 1 && h <= 6)) {
+      cambiarClase(bodyOBJ, ampm, momentoDia[3], momentoDia[2]);
       emojiElegido = momentosEmoji[1];
     } else if (h >= 7 && h < 8) {
-      console.log("atardece");
-      console.log(h);
-      document.body.classList.remove("tarde");
-      document.body.classList.add("atardece");
+      cambiarClase(bodyOBJ, ampm, momentoDia[4], momentoDia[3]);
       emojiElegido = momentosEmoji[2];
     } else if (h >= 8 && h < 10) {
-      console.log("anochece");
-      document.body.classList.remove("atardece");
-      document.body.classList.add("anochece");
+      cambiarClase(bodyOBJ, ampm, momentoDia[5], momentoDia[4]);
       emojiElegido = momentosEmoji[3];
     } else if (h >= 10 && h < 12) {
-      console.log("noche");
-      document.body.classList.remove("anochece");
-      document.body.classList.add("noche");
+      cambiarClase(bodyOBJ, ampm, momentoDia[0], momentoDia[5]);
       emojiElegido = momentosEmoji[4];
     }
     // PM
-    cambioAmPm.classList.replace("am", "pm");
+    cambiarClase(cambioAmPm, ampm);
     cambioAmPm.innerHTML = `${ampm} <span id="emoji">${emojiElegido}</span>`;
   } else {
+    // body
+    cambiarClase(bodyOBJ, ampm);
     // es - son
-    esLa.classList.replace("am", "pm");
+    cambiarClase(esLa, ampm);
     // AM - emoji
-    cambioAmPm.classList.replace("am", "pm");
-    if (h >= 12 && h < 6) {
-      console.log("noche");
-      if (document.body.classList.contains("noche")) {
-        console.log("YA TIENE NOCHE");
-      }
+    cambiarClase(cambioAmPm, ampm);
+    if (h == 12 || (h >= 1 && h <= 6)) {
+      cambiarClase(bodyOBJ, ampm, momentoDia[0], momentoDia[0]);
       emojiElegido = momentosEmoji[4];
-    } else if (h >= 6 && h < 7) {
-      console.log("amanece");
-      document.body.classList.remove("noche");
-      document.body.classList.add("amanece");
+    } else if (h >= 6 && h < 10) {
+      cambiarClase(bodyOBJ, ampm, momentoDia[1], momentoDia[0]);
       emojiElegido = momentosEmoji[0];
-    } else if (h >= 8 && h < 11) {
-      console.log("mediodia");
-      document.body.classList.remove("amanece");
-      document.body.classList.add("medidodia");
+    } else if (h >= 10 && h < 12) {
+      cambiarClase(bodyOBJ, ampm, momentoDia[2], momentoDia[1]);
       emojiElegido = momentosEmoji[1];
     }
     cambioAmPm.innerHTML = `${ampm} <span id="emoji">${emojiElegido}</span>`;

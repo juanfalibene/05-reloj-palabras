@@ -45,24 +45,22 @@ const pintarHora = (h, m, ampm, s) => {
   // crear child .minutero
   const minuteroDIV = document.createElement("div");
   minuteroDIV.classList.add("minutero");
-  minuteroDIV.setAttribute("id", `"m-${h}"`);
+  minuteroDIV.setAttribute("id", `m-${h}`);
   horaActual.appendChild(minuteroDIV);
 
   // % degradado minutero blanco min transcurridos negro min faltan
   let mf = Math.floor(60 - m);
   let porcentaje = (60 - mf) * (100 / 60);
 
-  // al minuto 0 remover elemeto minutero en hora anterior -- ULTIMAS PRUEBAS MIE 27
+  // al minuto 0 remover elemento minutero en hora anterior -- ULTIMAS PRUEBAS JUE 28
   let horaAnterior = horasArr.at(h - 1);
   const horaAnteriorLi = document.getElementById(horaAnterior);
-  const horaAnteriorMinuteroDIV = document.getElementById(
-    `"m-${horaAnterior}"`
-  );
-  if (m == 0 && horaAnteriorMinuteroDIV != null) {
+  const horaAnteriorMinuteroDIV = document.getElementById(`m-${h - 1}`);
+  if (m == 0 && s == "00" && horaAnteriorLi.hasChildNodes()) {
     horaAnteriorLi.style = "";
-    horaAnteriorLi.removeChild(horaAnteriorMinuteroDIV);
+    // recargar pagina
+    location.reload();
   }
-
   // actualizar estilos de degradado % por minuto
   let coloresArr = [
     "rgba(255, 255, 255, 0.4)",
@@ -79,12 +77,23 @@ const pintarHora = (h, m, ampm, s) => {
   horaActual.style.webkitBackgroundClip = "text";
   horaActual.style.webkitTextFillColor = "transparent";
   horaActual.classList.add("min");
-  /* mover minutero segun % let minLeft = m + 1.6; -- SIN UTILIZAR */
   // actualizar minutero y segundero escrito
-  let minPseudo = document.querySelector(".minutero");
-  // Pproxima mejora: escribir minutos y segundos desde array
-  let frase = `${m.toString().padStart(2, "0")} MINUTOS<br>${s} SEGUNDOS`;
-  minPseudo.innerHTML = frase;
+  let minuteroID = document.getElementById(`m-${h}`);
+  // Proxima mejora: escribir minutos y segundos desde array
+  let minYseg = `${m.toString().padStart(2, "0")} M<br>${s} S`;
+  minuteroID.innerHTML = minYseg;
+  let minuteroRight = 100 - porcentaje;
+  console.log(
+    Math.floor(minuteroRight),
+    Math.floor(porcentaje),
+    minuteroRight,
+    porcentaje
+  );
+  if (Math.floor(porcentaje <= 90)) {
+    minuteroID.style.right = `${minuteroRight}%`;
+  } else {
+    minuteroID.style.right = `10%`;
+  }
 };
 
 const cambiarClase = (elemento, clase, momentoAdd, momentoRemove) => {

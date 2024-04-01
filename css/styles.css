@@ -51,6 +51,8 @@ body {
 }
 
 .ul1 {
+  min-width: -webkit-fit-content;
+  min-width: -moz-fit-content;
   min-width: fit-content;
   display: flex;
   flex-direction: row;
@@ -64,6 +66,8 @@ body {
 
 .ul1 li {
   display: flex;
+  min-width: -webkit-fit-content;
+  min-width: -moz-fit-content;
   min-width: fit-content;
   padding: 0;
   margin: 0;
@@ -74,6 +78,7 @@ body {
   -webkit-text-stroke-color: rgba(0, 0, 0, 0.6);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
+  -webkit-filter: drop-shadow(0.5px 0.5px 5px black);
   filter: drop-shadow(0.5px 0.5px 5px black);
   transition: all 60ms ease-in-out;
   overflow-wrap: normal;
@@ -140,13 +145,26 @@ body {
   -webkit-background-clip: text;
   -webkit-text-stroke-width: 0px !important;
   -webkit-text-fill-color: rgba(255, 255, 255, 0.6);
+  -webkit-filter: drop-shadow(1px 0.5px 1px rgba(255, 145, 0, 0.9));
   filter: drop-shadow(1px 0.5px 1px rgba(255, 145, 0, 0.9));
   z-index: 9999;
   transition: all 1s linear;
 }
 
 #segundero {
+  -webkit-animation: segundero 1s linear infinite;
   animation: segundero 1s linear infinite;
+}
+
+@-webkit-keyframes segundero {
+  from {
+    opacity: 0;
+    -webkit-text-fill-color: transparent;
+  }
+  to {
+    opacity: 1;
+    -webkit-text-fill-color: rgba(0, 0, 0, 0.6);
+  }
 }
 
 @keyframes segundero {
@@ -163,6 +181,7 @@ body {
 #emoji {
   font-size: 40%;
   padding: 0;
+  -webkit-clip-path: circle(25% at 42% 50%);
   clip-path: circle(25% at 42% 50%);
 }
 
@@ -213,11 +232,26 @@ body {
 
 @media screen and (max-width: 768px) {
   body {
+    align-content: flex-start;
+    align-items: flex-start;
+    justify-content: center;
     padding: 1px;
+    flex-wrap: wrap;
+  }
+
+  .parent {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0;
+  }
+
+  .ul1 {
+    flex-wrap: wrap;
+    justify-content: flex-start;
   }
   .ul1 li {
-    font-size: calc(33.3% + 0.025dvw);
-    width: fit-content;
+    font-size: calc(71.66% - 0.1dvw);
+    max-width: fit-content;
   }
   .min::before {
     margin: 0 0;
